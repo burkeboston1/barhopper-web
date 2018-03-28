@@ -7,6 +7,9 @@ import Button from 'material-ui/Button';
 import Grid from 'material-ui/Grid';
 import {Link} from 'react-router-dom';
 
+// BarHopper components
+import Header from './Header';
+
 class Signup extends Component {
     constructor(props) {
         super(props);
@@ -17,10 +20,13 @@ class Signup extends Component {
             password: "",
             confirmPassword: "",
             passwordsMatch: true,
+            nameError: false,
+            emailError: false
         }
 
         this.handleChange = this.handleChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.validateInput = this.validateInput.bind(this);
     }
 
     handleChange = name => event => {
@@ -29,17 +35,20 @@ class Signup extends Component {
         });
     };
 
+    validateInput = function() {
+        var nameError = !this.state.name;
+        var emailError = !this.state.email;
+        var passwordError = this.state.password !== this.state.confirmPassword || !this.state.password;
+        this.setState({nameError: nameError});
+        this.setState({emailError: emailError});
+        this.setState({passwordsMatch: !passwordError});
+        return !(nameError || emailError || passwordError);
+    }
+
     onSubmit = function() {
         // check password and confirm password match
-        if (this.state.password !== this.state.confirmPassword) {
-            // thing
-            this.setState({
-                passwordsMatch: false
-            });
-        } else {
-            this.setState({
-                passwordsMatch: true
-            });
+        if (this.validateInput()) {
+
             const signupUrl = 'https://barhopperapi.herokuapp.com/api/signup';
             var data = {
                 method: 'POST',
@@ -63,29 +72,22 @@ class Signup extends Component {
     render() {
         return(
             <div className="Signup">
-                <AppBar position="static" color="default" style={{padding: "5px"}}>
-                    <Toolbar>
-                        <img src="barhopper-icon.png" alt="LOGO" style={{marginLeft: "100px", marginRight: "15px", width: "100px"}}/>
-                        <Typography variant="title" color="inherit">
-                            BarHopper
-                        </Typography>
-                    </Toolbar>
-                </AppBar>
+                <Header />
 
                 <Grid container>
                     <Grid item xs={4}></Grid>
                     <Grid item xs={4} id="signupForm">
-                        <Typography style={{marginTop: "20px", textAlign: "center"}} variant="display1" color="inherit">
+                        <Typography style={{marginTop: "20px", textAlign: "center"}} variant="headline" color="inherit">
                             Register with BarHopper
                         </Typography>
                         <form style={{margin: "auto"}}>
-                            <TextField fullWidth id="name" label="Name" value={this.state.name} margin="normal" onChange={this.handleChange('name')}/>
+                            <TextField required fullWidth id="name" label="Name" value={this.state.name} error={this.state.nameError} margin="normal" onChange={this.handleChange('name')}/>
                             <br />
-                            <TextField fullWidth id="email" label="Email" value={this.state.email} margin="normal" onChange={this.handleChange('email')}/>
+                            <TextField required fullWidth id="email" label="Email" value={this.state.email} error={this.state.emailError} margin="normal" onChange={this.handleChange('email')}/>
                             <br />
-                            <TextField fullWidth id="password" label="Password" error={!this.state.passwordsMatch} value={this.state.password} margin="normal" onChange={this.handleChange('password')}/>
+                            <TextField required fullWidth id="password" label="Password" type="password" error={!this.state.passwordsMatch} value={this.state.password} margin="normal" onChange={this.handleChange('password')}/>
                             <br />
-                            <TextField fullWidth id="confirm-password" error={!this.state.passwordsMatch} label="Confirm Password" value={this.state.confirmPassword} margin="normal" onChange={this.handleChange('confirmPassword')}/>
+                            <TextField required fullWidth id="confirm-password" type="password" error={!this.state.passwordsMatch} label="Confirm Password" value={this.state.confirmPassword} margin="normal" onChange={this.handleChange('confirmPassword')}/>
                             <br />
                             <br />
                             <Button variant="flat" fullWidth style={{backgroundColor: "#fdcd4c"}} onClick={this.onSubmit}>Register</Button>
