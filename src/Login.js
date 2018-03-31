@@ -18,7 +18,9 @@ export default class Login extends Component {
             password: "",
             login: false,
             passwordError: false,
-            emailError: false
+            emailError: false,
+            bar_id: "",
+            token: ""
         }
 
         this.handleChange = this.handleChange.bind(this);
@@ -35,12 +37,12 @@ export default class Login extends Component {
     validateInput = function() {
         var emailError = !this.state.email;
         var passwordError = !this.state.password;
-        this.setState({emailError: emailError});
-        this.setState({passwordError: passwordError});
+        this.setState({emailError: emailError, passwordError: passwordError});
         return !(emailError || passwordError);
     }
 
     onSubmit = function() {
+        
         if (this.validateInput()) {
             const loginUrl = 'https://barhopperapi.herokuapp.com/api/authenticate';
 
@@ -55,21 +57,22 @@ export default class Login extends Component {
                 })
             }
 
-            fetch(loginUrl, data).then((res) => {
-                console.log('Response came back with status ' + res.status);
-                if (res.status == 200) {
-                    this.setState({login: true});
-                } else {
-                    this.setState({emailError: true});
-                    this.setState({passwordError: true});
-                }
-            });
+            fetch(loginUrl, data)
+                .then((res) => {return res.json();})
+                .then((res) =>{
+                    console.log(res);
+                    if (res.success === true) {
+                        this.setState({login: true, bar_id: res.desc_id, token: res.token});
+                    } else {
+                        this.setState({emailError: true, passwordError: true});
+                    }
+                });
         }
     };
 
     render() {
         if (this.state.login) {
-            return <Redirect push to="/dashboard" />;
+            return <Redirect push to={{pathname: "/dashboard", bar_id: this.state.bar_id, token: this.state.token}}/>;
         }
 
         return(<div className="Signup">
@@ -85,8 +88,7 @@ export default class Login extends Component {
                         <TextField required fullWidth id="email" label="Email" error={this.state.emailError} value={this.state.email} margin="normal" onChange={this.handleChange('email')}/>
                         <TextField required fullWidth id="password" label="Password" type="password" error={this.state.passwordError} value={this.state.password} margin="normal" onChange={this.handleChange('password')}/>
                         <br />
-                        <br />
-                        <Button variant="flat" fullWidth style={{backgroundColor: "#fdcd4c"}} onClick={this.onSubmit}>Login</Button>
+                        <Button variant="flat" fullWidth style={{backgroundColor: "#fdcd4c", marginTop: "10px"}} onClick={this.onSubmit}>Login</Button>
                         <Link to="/register"><Button variant="flat" fullWidth style={{marginTop: "5px"}}>Register</Button></Link>
                     </form>
                 </Grid>

@@ -1,11 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import registerServiceWorker from './registerServiceWorker';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 
 // BarHopper components
-import App from './App';
 import Signup from './Signup';
 import Login from './Login';
 import Dashboard from './Dashboard';

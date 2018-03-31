@@ -1,14 +1,16 @@
+// React
 import React, { Component } from 'react';
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
+import { Link } from 'react-router-dom';
+
+// Material UI
 import Typography from 'material-ui/Typography';
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 import Grid from 'material-ui/Grid';
-import {Link} from 'react-router-dom';
 
 // BarHopper components
 import Header from './Header';
+import CreateBar from './CreateBar';
 
 class Signup extends Component {
     constructor(props) {
@@ -21,7 +23,8 @@ class Signup extends Component {
             confirmPassword: "",
             passwordsMatch: true,
             nameError: false,
-            emailError: false
+            emailError: false,
+            registered: false
         }
 
         this.handleChange = this.handleChange.bind(this);
@@ -63,13 +66,21 @@ class Signup extends Component {
                 })
             }
 
-            fetch(signupUrl, data).then((res) => {
-                console.log('Response came back with status ' + res.status);
-            });
+            fetch(signupUrl, data)
+                .then((res) => {return res.json();})
+                .then((res) =>{
+                    if (res.success === true) {
+                        this.setState({registered: true, token: res.token, bar_id: res.bar_id});
+                    }
+                });
         }
     };
 
     render() {
+        if (this.state.registered) {
+            return (<div><Header /><CreateBar token={this.state.token}/></div>);
+        }
+
         return(
             <div className="Signup">
                 <Header />
