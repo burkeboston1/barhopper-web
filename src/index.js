@@ -8,14 +8,20 @@ import Signup from './Signup';
 import Login from './Login';
 import Dashboard from './Dashboard';
 
+// Material-UI Pickers
+import MomentUtils from 'material-ui-pickers/utils/moment-utils';
+import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
+
 ReactDOM.render(
-    <BrowserRouter>
-        <Switch>
-            <Route exact path="/" component={Login}/>
-            <Route exact path="/register" component={Signup}/>
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/dashboard" component={Dashboard} />
-        </Switch>
-    </BrowserRouter>, document.getElementById('root'));
+    <MuiPickersUtilsProvider utils={MomentUtils}>
+        <BrowserRouter>
+            <Switch>
+                <Route exact path="/" component={Login}/>
+                <Route exact path="/register" component={Signup}/>
+                <Route exact path="/login" component={Login} />
+                <Route exact path="/dashboard" component={Dashboard} />
+            </Switch>
+        </BrowserRouter>
+    </MuiPickersUtilsProvider>, document.getElementById('root'));
 
 registerServiceWorker();

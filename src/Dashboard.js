@@ -9,13 +9,21 @@ import List, { ListItem, ListItemText } from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
 import AddIcon from 'material-ui-icons/Add';
 import IconButton from 'material-ui/IconButton';
-import Divider from 'material-ui/Divider';
-import Button from 'material-ui/Button';
+import Modal from 'material-ui/Modal';
 
 // BarHopper components
 import Header from './Header';
+import CreatePromo from './CreatePromo';
 
 export default class Dashboard extends Component {
+
+    handleOpen = () => {
+        this.setState({ open: true });
+    };
+
+    handleClose = () => {
+        this.setState({ open: false });
+    };
 
     constructor(props) {
         super(props);
@@ -29,8 +37,12 @@ export default class Dashboard extends Component {
                 email: "",
                 phone: ""
             },
-            promotions: []
+            promotions: [],
+            open: false
         }
+
+        this.handleOpen = this.handleOpen.bind(this);
+        this.handleClose = this.handleClose.bind(this);
     }
 
     componentWillMount() {
@@ -56,21 +68,21 @@ export default class Dashboard extends Component {
         }
 
         fetch(getBarUrl, data)
-            .then((res) => {return res.json();})
-            .then((res) => {
-                if (res.success === true) {
-                    fetch(getPromosUrl, data)
-                        .then((pRes) => {return pRes.json()})
-                        .then((pRes) => {
-                            this.setState({
-                                bar: res.bar,
-                                bar_id: bar_id,
-                                token: token,
-                                promotions: pRes.results
-                            });
-                        });
-                }
-            });
+        .then((res) => {return res.json();})
+        .then((res) => {
+            if (res.success === true) {
+                fetch(getPromosUrl, data)
+                .then((pRes) => {return pRes.json()})
+                .then((pRes) => {
+                    this.setState({
+                        bar: res.bar,
+                        bar_id: bar_id,
+                        token: token,
+                        promotions: pRes.results
+                    });
+                });
+            }
+        });
     }
 
     render() {
@@ -85,49 +97,56 @@ export default class Dashboard extends Component {
 
                     <Grid item xs={10}>
                         <Grid container>
-                        <Grid item xs={4} style={{marginBottom: "15px"}}>
-                            <Card style={{padding: "10px"}}>
-                                <Typography variant="display2">{this.state.bar.name}</Typography>
-                                <br />
-                                <Typography>{this.state.bar.address}</Typography>
-                                <Typography>{this.state.bar.email}</Typography>
-                                <Typography>{this.state.bar.phone}</Typography>
-                            </Card>
-                        </Grid>
+                            <Grid item xs={4} style={{marginBottom: "15px"}}>
+                                <Card style={{padding: "10px"}}>
+                                    <Typography variant="display2">{this.state.bar.name}</Typography>
+                                    <br />
+                                    <Typography>{this.state.bar.address}</Typography>
+                                    <Typography>{this.state.bar.email}</Typography>
+                                    <Typography>{this.state.bar.phone}</Typography>
+                                </Card>
+                            </Grid>
 
-                        <Grid item xs={8}>
-                            <Card style={{padding: "10px"}}>
-                                <Grid container>
-                                    <Grid item xs={10}>
-                                        <Typography variant="display1">Our Promotions</Typography>
+                            <Grid item xs={8}>
+                                <Card style={{padding: "10px"}}>
+                                    <Grid container>
+                                        <Grid item xs={10}>
+                                            <Typography variant="display1">Our Promotions</Typography>
+                                        </Grid>
+                                        <Grid item xs={2}>
+                                            <div align="right">
+                                                <IconButton onClick={this.handleOpen} style={{backgroundColor: "#fdcd4c", color: "white"}}><AddIcon /></IconButton>
+                                            </div>
+                                        </Grid>
                                     </Grid>
-                                    <Grid item xs={2}>
-                                        <div align="right">
-                                        <IconButton style={{backgroundColor: "#fdcd4c", color: "white"}}><AddIcon /></IconButton>
-                                        </div>
-                                    </Grid>
-                                </Grid>
-                                <List component="nav">
-                                    {
-                                        this.state.promotions.map(function(promotion) {
-                                            return (
-                                                <ListItem style={{outline: "solid thin #00ff00"}}>
-                                                    <Avatar>H</Avatar>
-                                                    <ListItemText primary={promotion.name} secondary={promotion.description}/>
-                                                    {new Date(Date.parse(promotion.startDate)).toDateString()}
-                                                    {new Date(Date.parse(promotion.endDate)).toDateString()}
-                                                </ListItem>
-                                            );
-                                        })
-                                    }
-                                </List>
-                            </Card>
-                        </Grid>
+                                    <List component="nav">
+                                        {
+                                            this.state.promotions.map(function(promotion, i) {
+                                                return (
+                                                    <ListItem key={i}>
+                                                        <Avatar>{promotion.name[0]}</Avatar>
+                                                        <ListItemText primary={promotion.name} secondary={promotion.description}/>
+                                                        <Typography variant="body2">
+                                                            {new Date(Date.parse(promotion.startDate)).toDateString()}
+                                                            {" - "}
+                                                            {new Date(Date.parse(promotion.endDate)).toDateString()}
+                                                        </Typography>
+                                                    </ListItem>
+                                                );
+                                            })
+                                        }
+                                    </List>
+                                </Card>
+                            </Grid>
                         </Grid>
                     </Grid>
 
                     <Grid item xs={1}></Grid>
                 </Grid>
+
+                <Modal open={this.state.open} onClose={this.handleClose}>
+                    <CreatePromo />
+                </Modal>
             </div>
         )
     }
