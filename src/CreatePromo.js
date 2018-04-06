@@ -24,29 +24,43 @@ export default class CreatePromo extends Component {
         this.setState({ endDate: date });
     }
 
+    validateInput = function() {
+        var nameError = !this.state.name;
+        var descError = !this.state.description;
+        this.setState({
+            nameError: nameError,
+            descError: descError
+        })
+        return !nameError || !descError;
+    }
+
     onSubmit = function() {
-        var url = 'https://barhopperapi.herokuapp.com/api/newpromo';
+        // validate input
+        if (this.validateInput()) {
 
-        var data = {
-            method: 'POST',
-            body: JSON.stringify({
-                name: this.state.name,
-                description: this.state.description,
-                startDate: this.state.startDate,
-                endDate: this.state.endDate,
-                bar_id: this.state.bar_id
-            }),
-            headers: new Headers({
-                'Content-Type': 'application/json',
-                'x-access-token': this.state.token
-            })
-        };
+            var url = 'https://barhopperapi.herokuapp.com/api/newpromo';
 
-        fetch(url, data)
-            .then((res) => {return res.json();})
-            .then((res) => {
-                window.location.reload();
-            });
+            var data = {
+                method: 'POST',
+                body: JSON.stringify({
+                    name: this.state.name,
+                    description: this.state.description,
+                    startDate: this.state.startDate,
+                    endDate: this.state.endDate,
+                    bar_id: this.state.bar_id
+                }),
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    'x-access-token': this.state.token
+                })
+            };
+
+            fetch(url, data)
+                .then((res) => {return res.json();})
+                .then((res) => {
+                    window.location.reload();
+                });
+        }
     }
 
     constructor(props) {
@@ -57,6 +71,8 @@ export default class CreatePromo extends Component {
             token: "",
             name: "",
             description: "",
+            nameError: false,
+            descError: false,
             startDate: new Date(),
             endDate: new Date(),
             recurring: false,
@@ -69,6 +85,7 @@ export default class CreatePromo extends Component {
 
         //this.handleChange = this.handleChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.validateInput = this.validateInput.bind(this);
     }
 
     componentWillMount() {
@@ -85,11 +102,17 @@ export default class CreatePromo extends Component {
                     Create a Promotion
                 </Typography>
                 <form>
-                    <TextField id="name" label="Title" onChange={this.handleChange("name")} value={this.state.name} margin="dense" required fullWidth />
-                    <TextField id="description" label="Description" onChange={this.handleChange("description")} value={this.state.description} margin="dense" required fullWidth />
+                    <TextField id="name" label="Title" onChange={this.handleChange("name")}
+                        value={this.state.name} error={this.state.nameError}
+                        margin="dense" required fullWidth />
+
+                    <TextField id="description" label="Description" onChange={this.handleChange("description")}
+                        value={this.state.description} error={this.state.descError}
+                        margin="dense" required fullWidth />
 
                     <DateTimePicker
                         label="Start Date and Time"
+                        disablePast
                         style={{marginTop: "15px"}}
                         value={this.state.startDate}
                         onChange={this.handleStartDateChange}
@@ -99,6 +122,9 @@ export default class CreatePromo extends Component {
 
                     <DateTimePicker
                         label="End Date and Time"
+                        disablePast
+                        minDate={this.state.startDate}
+                        minDateMessage="End date must come after start date"
                         style={{marginTop: "15px"}}
                         value={this.state.endDate}
                         onChange={this.handleEndDateChange}
