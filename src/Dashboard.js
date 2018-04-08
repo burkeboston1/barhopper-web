@@ -5,16 +5,13 @@ import React, {Component} from 'react';
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 import Card, { CardContent } from 'material-ui/Card';
-import List, { ListItem, ListItemText } from 'material-ui/List';
-import Avatar from 'material-ui/Avatar';
-import AddIcon from 'material-ui-icons/Add';
-import IconButton from 'material-ui/IconButton';
-import DeleteIcon from 'material-ui-icons/Delete';
 import Modal from 'material-ui/Modal';
+import Fade from 'material-ui/transitions/Fade';
 
 // BarHopper components
-import Header from './Header';
 import CreatePromo from './CreatePromo';
+import Header from './Header';
+import PromotionList from './PromotionList';
 
 const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -22,11 +19,11 @@ export default class Dashboard extends Component {
 
     handleOpen = () => {
         this.setState({ open: true });
-    };
+    }
 
     handleClose = () => {
         this.setState({ open: false });
-    };
+    }
 
     formatDate = (dateStr) => {
         var date = new Date(dateStr);
@@ -46,9 +43,8 @@ export default class Dashboard extends Component {
                 email: "",
                 phone: ""
             },
-            promotions: [],
             open: false
-        }
+        };
 
         this.handleOpen = this.handleOpen.bind(this);
         this.handleClose = this.handleClose.bind(this);
@@ -64,7 +60,6 @@ export default class Dashboard extends Component {
         localStorage.setItem("BarID", bar_id);
 
         const getBarUrl = 'https://barhopperapi.herokuapp.com/api/bars/' + bar_id;
-        const getPromosUrl = 'https://barhopperapi.herokuapp.com/api/promotions/bar/' + bar_id;
 
         var data = {
             method: 'GET',
@@ -72,21 +67,16 @@ export default class Dashboard extends Component {
                 'Content-Type': 'application/json',
                 'x-access-token': token
             })
-        }
+        };
 
         fetch(getBarUrl, data)
         .then((res) => {return res.json();})
         .then((res) => {
             if (res.success === true) {
-                fetch(getPromosUrl, data)
-                .then((pRes) => {return pRes.json()})
-                .then((pRes) => {
-                    this.setState({
-                        bar: res.bar,
-                        bar_id: bar_id,
-                        token: token,
-                        promotions: pRes.results
-                    });
+                this.setState({
+                    bar: res.bar,
+                    bar_id: bar_id,
+                    token: token
                 });
             }
         });
@@ -96,7 +86,7 @@ export default class Dashboard extends Component {
 
         return (
             <div>
-                <Header />
+                <Header loggedIn={true}/>
                 <br />
                 <Grid container>
                     <Grid item xs></Grid>
@@ -117,42 +107,7 @@ export default class Dashboard extends Component {
                         </Grid>
 
                         <Grid item xs={8}>
-                            <Card>
-                                <CardContent>
-                                    <Grid container>
-                                        <Grid item xs={10}>
-                                            <Typography variant="display1">Our Promotions</Typography>
-                                        </Grid>
-                                        <Grid item xs={2} align="right">
-                                            <IconButton onClick={this.handleOpen} style={{backgroundColor: "#fdcd4c", color: "white"}}><AddIcon /></IconButton>
-                                        </Grid>
-                                    </Grid>
-                                </CardContent>
-                                <List component="nav">
-                                    {
-                                        this.state.promotions.map(function(promotion, i) {
-                                            return (
-                                                <ListItem key={i}>
-                                                    <Avatar>{promotion.name[0]}</Avatar>
-                                                    <ListItemText primary={promotion.name} secondary={promotion.description}/>
-                                                    <Typography variant="body1">
-                                                        {this.formatDate(promotion.startDate)}
-                                                    </Typography>
-                                                    <Typography style={{fontStyle: "italic"}}>
-                                                        &nbsp;&nbsp;thru&nbsp;&nbsp;
-                                                    </Typography>
-                                                    <Typography variant="body1">
-                                                        {this.formatDate(promotion.endDate)}
-                                                    </Typography>
-                                                    <IconButton aria-label="Delete" color="primary">
-                                                        <DeleteIcon />
-                                                    </IconButton>
-                                                </ListItem>
-                                            );
-                                        }, this)
-                                    }
-                                </List>
-                            </Card>
+                            <PromotionList handleOpen={this.handleOpen}/>
                         </Grid>
 
                     </Grid>
@@ -163,6 +118,6 @@ export default class Dashboard extends Component {
                     <CreatePromo />
                 </Modal>
             </div>
-        )
+        );
     }
 }

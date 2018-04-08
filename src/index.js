@@ -7,6 +7,7 @@ import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import Signup from './Signup';
 import Login from './Login';
 import Dashboard from './Dashboard';
+import PublicHomePage from './PublicHomePage';
 
 // Material-UI Pickers
 import MomentUtils from 'material-ui-pickers/utils/moment-utils';
@@ -15,12 +16,15 @@ import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsPr
 ReactDOM.render(
     <MuiPickersUtilsProvider utils={MomentUtils}>
         <BrowserRouter>
-            <Switch>
-                <Route exact path="/" component={Login}/>
-                <Route exact path="/register" component={Signup}/>
-                <Route exact path="/login" component={Login} />
-                <Route exact path="/dashboard" component={Dashboard} />
-            </Switch>
+            <div>
+                <Switch>
+                    <Route exact path="/" component={localStorage.getItem("Token") ? Dashboard : PublicHomePage}/>
+                    <Route exact path="/home" component={PublicHomePage} />
+                    <Route exact path="/register" component={Signup}/>
+                    <Route exact path="/login" component={Login} />
+                    <Route exact path="/dashboard" component={Dashboard} />
+                </Switch>
+            </div>
         </BrowserRouter>
     </MuiPickersUtilsProvider>, document.getElementById('root'));
 

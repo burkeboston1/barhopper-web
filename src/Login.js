@@ -60,7 +60,6 @@ export default class Login extends Component {
             fetch(loginUrl, data)
                 .then((res) => {return res.json();})
                 .then((res) =>{
-                    console.log(res);
                     if (res.success === true) {
                         this.setState({login: true, bar_id: res.desc_id, token: res.token});
                     } else {
@@ -76,8 +75,7 @@ export default class Login extends Component {
         }
 
         return(<div className="Signup">
-            <Header />
-
+            <Header loggedIn={false}/>
             <Grid container>
                 <Grid item xs={4}></Grid>
                 <Grid item xs={4} id="loginForm">
@@ -85,8 +83,8 @@ export default class Login extends Component {
                         Login to BarHopper
                     </Typography>
                     <form style={{margin: "auto"}}>
-                        <TextField required fullWidth id="email" label="Email" error={this.state.emailError} value={this.state.email} margin="normal" onChange={this.handleChange('email')}/>
-                        <TextField required fullWidth id="password" label="Password" type="password" error={this.state.passwordError} value={this.state.password} margin="normal" onChange={this.handleChange('password')}/>
+                        <TextField required fullWidth id="email" label="Email" error={this.state.emailError} value={this.state.email} margin="dense" onChange={this.handleChange('email')}/>
+                        <TextField required fullWidth id="password" label="Password" type="password" error={this.state.passwordError} value={this.state.password} margin="dense" onChange={this.handleChange('password')}/>
                         <br />
                         <Button variant="flat" fullWidth style={{backgroundColor: "#fdcd4c", marginTop: "10px"}} onClick={this.onSubmit}>Login</Button>
                         <Link to="/register"><Button variant="flat" fullWidth style={{marginTop: "5px"}}>Register</Button></Link>

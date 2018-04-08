@@ -86,8 +86,7 @@ class Signup extends Component {
 
         return(
             <div className="Signup">
-                <Header />
-
+                <Header loggedIn={false}/>
                 <Grid container>
                     <Grid item xs={4}></Grid>
                     <Grid item xs={4} id="signupForm">
@@ -95,13 +94,13 @@ class Signup extends Component {
                             Register with BarHopper
                         </Typography>
                         <form style={{margin: "auto"}}>
-                            <TextField required fullWidth id="name" label="Name" value={this.state.name} error={this.state.nameError} margin="normal" onChange={this.handleChange('name')}/>
+                            <TextField required fullWidth id="name" label="Name" value={this.state.name} error={this.state.nameError} margin="dense" onChange={this.handleChange('name')}/>
                             <br />
-                            <TextField required fullWidth id="email" label="Email" value={this.state.email} error={this.state.emailError} margin="normal" onChange={this.handleChange('email')}/>
+                            <TextField required fullWidth id="email" label="Email" value={this.state.email} error={this.state.emailError} margin="dense" onChange={this.handleChange('email')}/>
                             <br />
-                            <TextField required fullWidth id="password" label="Password" type="password" error={!this.state.passwordsMatch} value={this.state.password} margin="normal" onChange={this.handleChange('password')}/>
+                            <TextField required fullWidth id="password" label="Password" type="password" error={!this.state.passwordsMatch} value={this.state.password} margin="dense" onChange={this.handleChange('password')}/>
                             <br />
-                            <TextField required fullWidth id="confirm-password" type="password" error={!this.state.passwordsMatch} label="Confirm Password" value={this.state.confirmPassword} margin="normal" onChange={this.handleChange('confirmPassword')}/>
+                            <TextField required fullWidth id="confirm-password" type="password" error={!this.state.passwordsMatch} label="Confirm Password" value={this.state.confirmPassword} margin="dense" onChange={this.handleChange('confirmPassword')}/>
                             <br />
                             <br />
                             <Button variant="flat" fullWidth style={{backgroundColor: "#fdcd4c"}} onClick={this.onSubmit}>Register</Button>
