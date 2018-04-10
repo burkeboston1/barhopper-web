@@ -6,7 +6,7 @@ import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 import Card, { CardContent } from 'material-ui/Card';
 import Modal from 'material-ui/Modal';
-import Fade from 'material-ui/transitions/Fade';
+import Button from 'material-ui/Button';
 
 // BarHopper components
 import CreatePromo from './CreatePromo';
@@ -31,7 +31,7 @@ export default class Dashboard extends Component {
         + " @ " + date.getHours() + ":" + date.getMinutes();
     }
 
-    constructor(props) {
+    constructor (props) {
         super(props);
 
         this.state = {
@@ -98,7 +98,7 @@ export default class Dashboard extends Component {
                                 <img alt="bar_photo" src="ho_house.jpg" style={{width: "100%"}}/>
                                 <CardContent>
                                     <Typography variant="display2">{this.state.bar.name}</Typography>
-                                    <br />
+                                    <br /> 
                                     <Typography>{this.state.bar.address}</Typography>
                                     <Typography>{this.state.bar.email}</Typography>
                                     <Typography>{this.state.bar.phone}</Typography>
@@ -107,7 +107,7 @@ export default class Dashboard extends Component {
                         </Grid>
 
                         <Grid item xs={8}>
-                            <PromotionList handleOpen={this.handleOpen}/>
+                            <PromotionList handleOpen={this.handleOpen} handleConfirmOpen={this.handleConfirmOpen}/>
                         </Grid>
 
                     </Grid>

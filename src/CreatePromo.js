@@ -2,7 +2,7 @@
 import React, {Component} from 'react';
 
 // Material UI
-import Card from 'material-ui/Card';
+import Card, { CardHeader } from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
@@ -129,7 +129,7 @@ export default class CreatePromo extends Component {
                         value={this.state.endDate}
                         onChange={this.handleEndDateChange}
                         />
-                    <Button onClick={this.onSubmit} variant="flat" fullWidth style={{backgroundColor: "#fdcd4c", marginTop: "10px"}}>Send It</Button>
+                    <Button onClick={this.onSubmit} variant="flat" fullWidth style={{backgroundColor: "#fdcd4c", marginTop: "15px"}}>Send It</Button>
                 </form>
             </Card>
         );

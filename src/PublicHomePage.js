@@ -22,7 +22,7 @@ export default class PublicHomePage extends Component {
 					<Grid item xs></Grid>
 					
 					<Grid item xs={4}>
-						<Typography variant="display3">Welcome to BarHopper</Typography>
+						<Typography align="center" variant="display3">Welcome to BarHopper</Typography>
 					</Grid>
 					
 					<Grid item xs></Grid>	

@@ -10,12 +10,17 @@ import Avatar from 'material-ui/Avatar';
 import AddIcon from 'material-ui-icons/Add';
 import IconButton from 'material-ui/IconButton';
 import DeleteIcon from 'material-ui-icons/Delete';
+import EditIcon from 'material-ui-icons/Edit';
+import Button from 'material-ui/Button';
+import Modal from 'material-ui/Modal';
 
 // BarHopper
 
 export default class PromotionList extends Component {
 
-	deletePromotion(promo_id) {
+	deleteSelectedPromo() {
+        var promo_id = this.state.selectedPromo;
+
 		const deletePromoUrl = 'https://barhopperapi.herokuapp.com/api/promotions/' + promo_id;
 		
 		var data = {
@@ -29,10 +34,26 @@ export default class PromotionList extends Component {
 		fetch(deletePromoUrl, data).then((res) => {return res.json()})
         	.then((res) => {
         		if (res.success === true) {
-        			this.forceUpdate();
+                    this.setState({ confirmOpen: false })
+                    window.location.reload();
         		}
         	})
-	}
+    }
+
+    confirmDelete = (promo_id) => {
+        this.setState({ 
+            confirmOpen: true, 
+            selectedPromo: promo_id
+        });
+    }
+    
+    handleConfirmOpen = () => {
+        this.setState({ confirmOpen: true });
+    }
+
+    handleConfirmClose = () => {
+        this.setState({ confirmOpen: false });
+    }
 
 	constructor(props) {
 		super(props);
@@ -40,13 +61,17 @@ export default class PromotionList extends Component {
 		this.state = {
 			bar_id: localStorage.getItem("BarID"), 
 			token: localStorage.getItem("Token"),
-			promotions: []
+            promotions: [], 
+            selectedPromo: "",
+            confirmOpen: false
 		};
 
-		this.deletePromotion = this.deletePromotion.bind(this);
+		this.deleteSelectedPromo = this.deleteSelectedPromo.bind(this);
+        this.handleConfirmOpen = this.handleConfirmOpen.bind(this);
+        this.handleConfirmClose = this.handleConfirmClose.bind(this);
 	}
 
-	componentWillUpdate() {
+	componentWillMount() {
 		const getPromosUrl = 'https://barhopperapi.herokuapp.com/api/promotions/bar/' + this.state.bar_id;
 
         var data = {
@@ -67,34 +92,50 @@ export default class PromotionList extends Component {
 
 	render() {
 		return (
-			<Card>
-                <CardContent>
-                    <Grid container>
-                        <Grid item xs={10}>
-                            <Typography variant="display1">Our Promotions</Typography>
+            <div>
+                <Card>
+                    <CardContent>
+                        <Grid container>
+                            <Grid item xs={10}>
+                                <Typography variant="display1">Our Promotions</Typography>
+                            </Grid>
+                            <Grid item xs={2} align="right">
+                                <IconButton onClick={this.props.handleOpen} style={{backgroundColor: "#fdcd4c", color: "white"}}><AddIcon /></IconButton>
+                            </Grid>
                         </Grid>
-                        <Grid item xs={2} align="right">
-                            <IconButton onClick={this.props.handleOpen} style={{backgroundColor: "#fdcd4c", color: "white"}}><AddIcon /></IconButton>
-                        </Grid>
-                    </Grid>
-                </CardContent>
-                <List component="nav">
-                    {
-                        this.state.promotions.map(function(promotion, i) {
-                            return (
-                                <ListItem key={i}>
-                                    <Avatar>{promotion.name[0]}</Avatar>
-                                    <ListItemText primary={promotion.name} secondary={promotion.description}/>
-                                    
-                                    <IconButton aria-label="Delete" color="primary" onClick={() => this.deletePromotion(promotion._id)}>
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </ListItem>
-                            );
-                        }, this)
-                    }
-                </List>
-            </Card>
+                    </CardContent>
+                    <List component="nav">
+                        {
+                            this.state.promotions.map(function(promotion, i) {
+                                return (
+                                    <ListItem key={i}>
+                                        <Avatar>{promotion.name[0]}</Avatar>
+                                        <ListItemText primary={promotion.name} secondary={promotion.description}/>
+                                        
+                                        <IconButton color="primary">
+                                            <EditIcon />
+                                        </IconButton>
+
+                                        <IconButton aria-label="Delete" style={{color: "red"}} onClick={() => this.confirmDelete(promotion._id)}>
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </ListItem>
+                                );
+                            }, this)
+                        }
+                    </List>
+                </Card>
+
+                <Modal open={this.state.confirmOpen} onClose={this.handleConfirmClose}>
+                    <Card style={{position: "absolute", width: "40%", left: "50%", top: "50%", transform: "translate(-50%, -50%)", padding: "25px"}}>
+                        <Typography variant="display1">Delete Promotion</Typography>
+                        <br />
+                        <Typography variant="body1">Are you sure you wish to delete this promotion?</Typography>
+                        <br />
+                        <Button fullWidth style={{backgroundColor: "red", color: "white"}} onClick={this.deleteSelectedPromo}>Delete</Button>
+                    </Card>
+                </Modal>
+            </div>
 			)
 	}
 }
