@@ -7,6 +7,7 @@ import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
+import Card, { CardContent } from 'material-ui/Card';
 
 // BarHopper
 
@@ -23,7 +24,6 @@ export default class CreateBar extends Component {
             emailError: false,
             addrError: false,
             phoneError: false,
-            created: false,
             bar_id: ""
         }
 
@@ -66,32 +66,37 @@ export default class CreateBar extends Component {
             fetch(createBarUrl, data)
                 .then((res) => {return res.json();})
                 .then((res) =>{
-                    this.setState({created: true, bar_id: res.bar_id})
+                    if (res.success === true) {
+                        this.props.handleNext({bar_id: res.bar_id});
+                    }
                 });
         }
     }
 
     render() {
-        if (this.state.created) {
-            return <Redirect push to={{pathname: "/dashboard", bar_id: this.state.bar_id, token: this.state.token}}/>;
-        }
         return (
             <div>
+                <Card><CardContent>
                 <Grid container>
-                    <Grid item xs={4}></Grid>
-                    <Grid item xs={4} id="createBarForm">
-                        <Typography style={{marginTop: "20px", textAlign: "center"}} variant="headline">Create Your Bar</Typography>
+                    <Grid item xs={6}>
+                        <Typography style={{marginTop: "20px"}} variant="display1">
+                            Describe Your Bar</Typography>
+                        <br />
+                        <Typography variant="subheading">
+                            Tell us all about your bar. Soon you'll be able to upload a logo and a picture of your storefront!    
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={6} id="createBarForm">
                         <form>
                             <TextField fullWidth required id="barName" label="Bar Name" value={this.state.barName} error={this.state.nameError} onChange={this.handleChange('barName')} style={{marginTop: "5px"}}/>
                             <TextField fullWidth required id="barAddress" label="Address" value={this.state.barAddress} error={this.state.addrError} onChange={this.handleChange('barAddress')} style={{marginTop: "5px"}}/>
                             <TextField fullWidth required id="barEmail" label="Email" value={this.state.barEmail} error={this.state.emailError} onChange={this.handleChange('barEmail')} style={{marginTop: "5px"}}/>
                             <TextField fullWidth required id="barPhone" label="Phone #" value={this.state.barPhone} error={this.state.phoneError} onChange={this.handleChange('barPhone')} style={{marginTop: "5px"}}/>
 
-                            <Button fullWidth style={{marginTop: "15px", backgroundColor: "#fdcd4c"}} onClick={this.onSubmit}>Submit</Button>
+                            <Button fullWidth style={{marginTop: "15px", backgroundColor: "#fdcd4c", color: "white"}} onClick={this.onSubmit}>Submit</Button>
                         </form>
                     </Grid>
-                    <Grid item xs={4}></Grid>
-                </Grid>
+                </Grid></CardContent></Card>
             </div>
         );
     }

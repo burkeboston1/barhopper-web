@@ -52,8 +52,8 @@ export default class Dashboard extends Component {
 
     componentWillMount() {
         // Get bar_id, token from props or local storage
-        var token = this.props.location.token || localStorage.getItem("Token");
-        var bar_id = this.props.location.bar_id || localStorage.getItem("BarID");
+        var token = this.props.location.token || this.props.token || localStorage.getItem("Token");
+        var bar_id = this.props.location.bar_id || this.props.bar_id || localStorage.getItem("BarID");
 
         // Save token, bar_id in local storage in case of page refresh
         localStorage.setItem("Token", token);

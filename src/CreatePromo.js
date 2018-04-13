@@ -58,7 +58,9 @@ export default class CreatePromo extends Component {
             fetch(url, data)
                 .then((res) => {return res.json();})
                 .then((res) => {
-                    window.location.reload();
+                    if (res.success === true) {
+                        window.location.reload();
+                    }
                 });
         }
     }

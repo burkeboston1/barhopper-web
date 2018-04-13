@@ -1,12 +1,12 @@
 // React
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 
 // Material UI
 import Typography from 'material-ui/Typography';
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 import Grid from 'material-ui/Grid';
+import Card, { CardContent } from 'material-ui/Card';
 
 // BarHopper components
 import Header from './Header';
@@ -19,11 +19,13 @@ class Signup extends Component {
         this.state = {
             name: "",
             email: "",
+            tempPassword: "",
             password: "",
             confirmPassword: "",
             passwordsMatch: true,
             nameError: false,
             emailError: false,
+            tempPasswordError: false,
             registered: false
         }
 
@@ -55,60 +57,84 @@ class Signup extends Component {
         // check password and confirm password match
         if (this.validateInput()) {
 
-            const signupUrl = 'https://barhopperapi.herokuapp.com/api/signup';
+            const loginUrl = 'https://barhopperapi.herokuapp.com/api/authenticate';
+
             var data = {
                 method: 'POST',
                 body: JSON.stringify({
                     email: this.state.email,
-                    name: this.state.name,
-                    password: this.state.password,
-                    admin: true
+                    password: this.state.tempPassword
                 }),
                 headers: new Headers({
                     'Content-Type': 'application/json'
                 })
             }
 
-            fetch(signupUrl, data)
-                .then((res) => {return res.json();})
-                .then((res) =>{
-                    if (res.success === true) {
-                        this.setState({registered: true, token: res.token, bar_id: res.bar_id});
+            fetch(loginUrl, data)
+                .then((loginRes) => {return loginRes.json();})
+                .then((loginResJson) =>{
+                    if (loginResJson.success === true) {
+                        const updateUserUrl = 'https://barhopperapi.herokuapp.com/api/users/' + loginResJson.user_id;
+
+                        var data = {
+                            method: 'PATCH', 
+                            body: JSON.stringify({
+                                name: this.state.name,
+                                password: this.state.password, 
+                            }),
+                            headers: new Headers({
+                                'Content-Type': 'application/json', 
+                                'x-access-token': loginResJson.token
+                            })
+                        }
+
+                        fetch(updateUserUrl, data)
+                            .then((updateRes) => {return updateRes.json();})
+                            .then((updateResJson) => {
+                                if (updateResJson.success === true) {
+                                    this.props.handleNext({token: loginResJson.token});
+                                }
+                            })
+                    } else {
+                        this.setState({emailError: true, tempPasswordError: true});
                     }
                 });
         }
     };
 
     render() {
-        if (this.state.registered) {
-            return (<div><Header /><CreateBar token={this.state.token}/></div>);
-        }
-
         return(
             <div className="Signup">
-                <Header loggedIn={false}/>
-                <Grid container>
-                    <Grid item xs={4}></Grid>
-                    <Grid item xs={4} id="signupForm">
-                        <Typography style={{marginTop: "20px", textAlign: "center"}} variant="headline" color="inherit">
-                            Register with BarHopper
-                        </Typography>
-                        <form style={{margin: "auto"}}>
-                            <TextField required fullWidth id="name" label="Name" value={this.state.name} error={this.state.nameError} margin="dense" onChange={this.handleChange('name')}/>
+                <Card><CardContent>
+                        <Grid container>
+                        <Grid item xs={6}>
+                            <Typography style={{marginTop: "20px"}} variant="display1">
+                                    Register with BarHopper
+                            </Typography>
                             <br />
-                            <TextField required fullWidth id="email" label="Email" value={this.state.email} error={this.state.emailError} margin="dense" onChange={this.handleChange('email')}/>
+                            <Typography variant="subheading">If you own or manage a bar and would like to use BarHopper to promote
+                                your business, please contact the BarHopper team.</Typography>
                             <br />
-                            <TextField required fullWidth id="password" label="Password" type="password" error={!this.state.passwordsMatch} value={this.state.password} margin="dense" onChange={this.handleChange('password')}/>
-                            <br />
-                            <TextField required fullWidth id="confirm-password" type="password" error={!this.state.passwordsMatch} label="Confirm Password" value={this.state.confirmPassword} margin="dense" onChange={this.handleChange('confirmPassword')}/>
-                            <br />
-                            <br />
-                            <Button variant="flat" fullWidth style={{backgroundColor: "#fdcd4c"}} onClick={this.onSubmit}>Register</Button>
-                            <Link to="/login"><Button variant="flat" fullWidth style={{marginTop: "5px"}}>Login</Button></Link>
-                        </form>
-                    </Grid>
-                    <Grid item xs={4}></Grid>
-                </Grid>
+                            <Typography variant="subheading">If you've already been verified and have a temporary password, just fill
+                                out the form on the right.</Typography>
+                        </Grid>
+                        <Grid item xs={6} id="signupForm">
+                            <form style={{margin: "auto"}}>
+                                <TextField required fullWidth id="name" label="Name" value={this.state.name} error={this.state.nameError} margin="dense" onChange={this.handleChange('name')}/>
+                                <br />
+                                <TextField required fullWidth id="email" label="Email" value={this.state.email} error={this.state.emailError} margin="dense" onChange={this.handleChange('email')}/>
+                                <br />
+                                <TextField required fullWidth id="temp-password" type="password" label="Temporary Password" value={this.state.tempPassword} margin="dense" onChange={this.handleChange('tempPassword')} error={this.state.tempPasswordError}></TextField>
+                                <br />
+                                <TextField required fullWidth id="password" label="New Password" type="password" error={!this.state.passwordsMatch} value={this.state.password} margin="dense" onChange={this.handleChange('password')}/>
+                                <br />
+                                <TextField required fullWidth id="confirm-password" type="password" error={!this.state.passwordsMatch} label="Confirm New Password" value={this.state.confirmPassword} margin="dense" onChange={this.handleChange('confirmPassword')}/>
+                                <br />
+                                <Button variant="flat" fullWidth style={{backgroundColor: "#fdcd4c", color: "white", marginTop: "10px"}} onClick={this.onSubmit}>Register</Button>
+                            </form>
+                        </Grid>
+                        </Grid>
+                    </CardContent></Card>
             </div>
         )
     }

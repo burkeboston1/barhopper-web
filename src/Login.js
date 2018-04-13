@@ -1,9 +1,13 @@
+// React
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
+
+// Material-UI
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 import Grid from 'material-ui/Grid';
-import {Link, Redirect} from 'react-router-dom';
 import Typography from 'material-ui/Typography';
+import Card, { CardContent } from 'material-ui/Card';
 
 // BarHopper Components
 import Header from './Header';
@@ -74,23 +78,33 @@ export default class Login extends Component {
             return <Redirect push to={{pathname: "/dashboard", bar_id: this.state.bar_id, token: this.state.token}}/>;
         }
 
-        return(<div className="Signup">
+        return(<div className="Login">
             <Header loggedIn={false}/>
+            <br />
             <Grid container>
-                <Grid item xs={4}></Grid>
-                <Grid item xs={4} id="loginForm">
-                    <Typography style={{marginTop: "20px", textAlign: "center"}} variant="headline" color="inherit">
-                        Login to BarHopper
-                    </Typography>
-                    <form style={{margin: "auto"}}>
-                        <TextField required fullWidth id="email" label="Email" error={this.state.emailError} value={this.state.email} margin="dense" onChange={this.handleChange('email')}/>
-                        <TextField required fullWidth id="password" label="Password" type="password" error={this.state.passwordError} value={this.state.password} margin="dense" onChange={this.handleChange('password')}/>
+                <Grid item xs={2}></Grid>
+                <Grid item xs={8}><Card><CardContent>
+                    <Grid container>
+                    <Grid item xs={6}>
+                        <Typography style={{marginTop: "20px"}} variant="display1">
+                            Login to BarHopper
+                        </Typography>
                         <br />
-                        <Button variant="flat" fullWidth style={{backgroundColor: "#fdcd4c", marginTop: "10px"}} onClick={this.onSubmit}>Login</Button>
-                        <Link to="/register"><Button variant="flat" fullWidth style={{marginTop: "5px"}}>Register</Button></Link>
-                    </form>
-                </Grid>
-                <Grid item xs={4}></Grid>
+                        <Typography variant="subheading">
+                            Login to continue promoting your bar.</Typography>
+                        <br />
+                    </Grid>
+                    <Grid item xs={6} id="loginForm">
+                        <form style={{margin: "auto"}}>
+                            <TextField required fullWidth id="email" label="Email" error={this.state.emailError} value={this.state.email} margin="dense" onChange={this.handleChange('email')}/>
+                            <TextField required fullWidth id="password" label="Password" type="password" error={this.state.passwordError} value={this.state.password} margin="dense" onChange={this.handleChange('password')}/>
+                            <br />
+                            <Button variant="flat" fullWidth style={{backgroundColor: "#fdcd4c", color: "white", marginTop: "10px"}} onClick={this.onSubmit}>Login</Button>
+                        </form>
+                    </Grid>
+                    </Grid>
+                </CardContent></Card></Grid>
+                <Grid item xs={2}></Grid>
             </Grid>
         </div>)
     }

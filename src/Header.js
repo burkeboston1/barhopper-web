@@ -55,7 +55,8 @@ class ButtonAppBar extends Component {
                                 ? 
                                 <Link to="/home"><Button onClick={this.logout} style={{backgroundColor: "#fdcd4c", color: "white"}}>Logout</Button></Link>
                                 :
-                                <div><Link to="/login"><Button style={{backgroundColor: "#fdcd4c", color: "white", marginRight: "8px"}}>Login</Button></Link><Link to="/register"><Button style={{backgroundColor: "#fdcd4c", color: "white"}}>Register</Button></Link></div>
+                                <div><Link to="/login"><Button style={{backgroundColor: "#fdcd4c", color: "white", marginRight: "8px"}}>Login</Button></Link>
+                                <Link to="/register"><Button style={{backgroundColor: "#fdcd4c", color: "white"}}>Register</Button></Link></div>
                         }
                     </Toolbar>
                 </AppBar>
