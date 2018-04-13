@@ -57,44 +57,26 @@ class Signup extends Component {
         // check password and confirm password match
         if (this.validateInput()) {
 
-            const loginUrl = 'https://barhopperapi.herokuapp.com/api/authenticate';
+            const verifyUrl = 'https://barhopperapi.herokuapp.com/api/verify';
 
             var data = {
                 method: 'POST',
                 body: JSON.stringify({
                     email: this.state.email,
-                    password: this.state.tempPassword
+                    tempPassword: this.state.tempPassword, 
+                    password: this.state.password, 
+                    name: this.state.name
                 }),
                 headers: new Headers({
                     'Content-Type': 'application/json'
                 })
             }
 
-            fetch(loginUrl, data)
-                .then((loginRes) => {return loginRes.json();})
-                .then((loginResJson) =>{
-                    if (loginResJson.success === true) {
-                        const updateUserUrl = 'https://barhopperapi.herokuapp.com/api/users/' + loginResJson.user_id;
-
-                        var data = {
-                            method: 'PATCH', 
-                            body: JSON.stringify({
-                                name: this.state.name,
-                                password: this.state.password, 
-                            }),
-                            headers: new Headers({
-                                'Content-Type': 'application/json', 
-                                'x-access-token': loginResJson.token
-                            })
-                        }
-
-                        fetch(updateUserUrl, data)
-                            .then((updateRes) => {return updateRes.json();})
-                            .then((updateResJson) => {
-                                if (updateResJson.success === true) {
-                                    this.props.handleNext({token: loginResJson.token});
-                                }
-                            })
+            fetch(verifyUrl, data)
+                .then((res) => {return res.json();})
+                .then((resJson) => {
+                    if (resJson.success === true) {
+                        this.props.handleNext({token: resJson.token});
                     } else {
                         this.setState({emailError: true, tempPasswordError: true});
                     }
@@ -107,7 +89,7 @@ class Signup extends Component {
             <div className="Signup">
                 <Card><CardContent>
                         <Grid container>
-                        <Grid item xs={6}>
+                        <Grid item xs={5}>
                             <Typography style={{marginTop: "20px"}} variant="display1">
                                     Register with BarHopper
                             </Typography>
@@ -118,7 +100,7 @@ class Signup extends Component {
                             <Typography variant="subheading">If you've already been verified and have a temporary password, just fill
                                 out the form on the right.</Typography>
                         </Grid>
-                        <Grid item xs={6} id="signupForm">
+                        <Grid item xs={7} id="signupForm">
                             <form style={{margin: "auto"}}>
                                 <TextField required fullWidth id="name" label="Name" value={this.state.name} error={this.state.nameError} margin="dense" onChange={this.handleChange('name')}/>
                                 <br />

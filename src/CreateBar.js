@@ -78,7 +78,7 @@ export default class CreateBar extends Component {
             <div>
                 <Card><CardContent>
                 <Grid container>
-                    <Grid item xs={6}>
+                    <Grid item xs={5}>
                         <Typography style={{marginTop: "20px"}} variant="display1">
                             Describe Your Bar</Typography>
                         <br />
@@ -86,7 +86,7 @@ export default class CreateBar extends Component {
                             Tell us all about your bar. Soon you'll be able to upload a logo and a picture of your storefront!    
                         </Typography>
                     </Grid>
-                    <Grid item xs={6} id="createBarForm">
+                    <Grid item xs={7} id="createBarForm">
                         <form>
                             <TextField fullWidth required id="barName" label="Bar Name" value={this.state.barName} error={this.state.nameError} onChange={this.handleChange('barName')} style={{marginTop: "5px"}}/>
                             <TextField fullWidth required id="barAddress" label="Address" value={this.state.barAddress} error={this.state.addrError} onChange={this.handleChange('barAddress')} style={{marginTop: "5px"}}/>

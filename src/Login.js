@@ -85,7 +85,7 @@ export default class Login extends Component {
                 <Grid item xs={2}></Grid>
                 <Grid item xs={8}><Card><CardContent>
                     <Grid container>
-                    <Grid item xs={6}>
+                    <Grid item xs={5}>
                         <Typography style={{marginTop: "20px"}} variant="display1">
                             Login to BarHopper
                         </Typography>
@@ -94,7 +94,7 @@ export default class Login extends Component {
                             Login to continue promoting your bar.</Typography>
                         <br />
                     </Grid>
-                    <Grid item xs={6} id="loginForm">
+                    <Grid item xs={7} id="loginForm">
                         <form style={{margin: "auto"}}>
                             <TextField required fullWidth id="email" label="Email" error={this.state.emailError} value={this.state.email} margin="dense" onChange={this.handleChange('email')}/>
                             <TextField required fullWidth id="password" label="Password" type="password" error={this.state.passwordError} value={this.state.password} margin="dense" onChange={this.handleChange('password')}/>
