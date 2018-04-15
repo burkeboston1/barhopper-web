@@ -45,7 +45,7 @@ class ButtonAppBar extends Component {
             <div className={classes.root}>
                 <AppBar position="sticky" style={{padding: "10px"}}>
                     <Toolbar>
-                        <Link to=""><img className={classes.logo} src="barhopper-icon.png" /></Link>
+                        <Link to=""><img className={classes.logo} alt="Logo" src="barhopper-icon.png" /></Link>
                         <span className={classes.flex}>
                             <Typography variant="title" color="inherit">BarHopper</Typography>
                             <Typography variant="headline" color="inherit">Admin Dashboard</Typography>

@@ -1,6 +1,5 @@
 // React
 import React, {Component} from 'react';
-import {Redirect} from 'react-router-dom';
 
 // Material
 import Grid from 'material-ui/Grid';

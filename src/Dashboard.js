@@ -6,23 +6,31 @@ import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 import Card, { CardContent } from 'material-ui/Card';
 import Modal from 'material-ui/Modal';
-import Button from 'material-ui/Button';
 
 // BarHopper components
 import CreatePromo from './CreatePromo';
 import Header from './Header';
 import PromotionList from './PromotionList';
+import EditPromo from './EditPromo';
 
 const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export default class Dashboard extends Component {
 
-    handleOpen = () => {
-        this.setState({ open: true });
+    handleCreateOpen = () => {
+        this.setState({ createOpen: true });
     }
 
-    handleClose = () => {
-        this.setState({ open: false });
+    handleCreateClose = () => {
+        this.setState({ createOpen: false });
+    }
+
+    handleEditOpen = (selected) => {
+        this.setState({ editOpen: true, selectedPromo: selected });
+    }
+
+    handleEditClose = () => {
+        this.setState({ editOpen: false });
     }
 
     formatDate = (dateStr) => {
@@ -43,11 +51,15 @@ export default class Dashboard extends Component {
                 email: "",
                 phone: ""
             },
-            open: false
+            createOpen: false, 
+            editOpen: false, 
+            selectedPromo: ""
         };
 
-        this.handleOpen = this.handleOpen.bind(this);
-        this.handleClose = this.handleClose.bind(this);
+        this.handleCreateOpen = this.handleCreateOpen.bind(this);
+        this.handleCreateClose = this.handleCreateClose.bind(this);
+        this.handleEditOpen = this.handleEditOpen.bind(this);
+        this.handleEditClose = this.handleEditClose.bind(this);
     }
 
     componentWillMount() {
@@ -107,15 +119,18 @@ export default class Dashboard extends Component {
                         </Grid>
 
                         <Grid item xs={8}>
-                            <PromotionList handleOpen={this.handleOpen} handleConfirmOpen={this.handleConfirmOpen}/>
+                            <PromotionList handleCreateOpen={this.handleCreateOpen} handleEditOpen={this.handleEditOpen} handleConfirmOpen={this.handleConfirmOpen}/>
                         </Grid>
 
                     </Grid>
                     <Grid item xs></Grid>
                 </Grid>
 
-                <Modal open={this.state.open} onClose={this.handleClose}>
+                <Modal open={this.state.createOpen} onClose={this.handleCreateClose}>
                     <CreatePromo />
+                </Modal>
+                <Modal open={this.state.editOpen} onClose={this.handleEditClose}>
+                    <EditPromo promotion={this.state.selectedPromo}/>
                 </Modal>
             </div>
         );

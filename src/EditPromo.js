@@ -1,15 +1,14 @@
 // React
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
-// Material UI
-import Card from 'material-ui/Card';
+// Materialimport Card from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 import DateTimePicker from 'material-ui-pickers/DateTimePicker';
+import Card from 'material-ui/Card';
 
-export default class CreatePromo extends Component {
-
+export default class EditPromo extends Component {
     handleChange = name => event => {
         this.setState({
             [name]: event.target.value,
@@ -38,10 +37,10 @@ export default class CreatePromo extends Component {
         // validate input
         if (this.validateInput()) {
 
-            var url = 'https://barhopperapi.herokuapp.com/api/newpromo';
+            var url = 'http://localhost:8080/api/promotions/' + this.props.promotion._id;
 
             var data = {
-                method: 'POST',
+                method: 'PATCH',
                 body: JSON.stringify({
                     name: this.state.name,
                     description: this.state.description,
@@ -71,12 +70,12 @@ export default class CreatePromo extends Component {
         this.state = {
             bar_id: "",
             token: "",
-            name: "",
-            description: "",
+            name: this.props.promotion.name,
+            description: this.props.promotion.description,
             nameError: false,
             descError: false,
-            startDate: new Date(),
-            endDate: new Date(),
+            startDate: this.props.promotion.startDate,
+            endDate: this.props.promotion.endDate,
             recurring: false,
             recurrence: {
                 daysOfWeek: "",
@@ -84,8 +83,6 @@ export default class CreatePromo extends Component {
                 endTime: ""
             }
         }
-
-        //this.handleChange = this.handleChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
         this.validateInput = this.validateInput.bind(this);
     }
@@ -101,7 +98,7 @@ export default class CreatePromo extends Component {
         return(
             <Card style={{position: "absolute", width: "40%", left: "50%", top: "50%", transform: "translate(-50%, -50%)", padding: "25px"}}>
                 <Typography variant="display1">
-                    Create a Promotion
+                    Update a Promotion
                 </Typography>
                 <form>
                     <TextField id="name" label="Title" onChange={this.handleChange("name")}
@@ -131,9 +128,9 @@ export default class CreatePromo extends Component {
                         value={this.state.endDate}
                         onChange={this.handleEndDateChange}
                         />
-                    <Button onClick={this.onSubmit} variant="flat" fullWidth style={{backgroundColor: "#fdcd4c", marginTop: "15px"}}>Send It</Button>
+                    <Button onClick={this.onSubmit} variant="flat" fullWidth style={{backgroundColor: "#fdcd4c", marginTop: "15px"}}>Update</Button>
                 </form>
             </Card>
-        );
+        )
     }
 }

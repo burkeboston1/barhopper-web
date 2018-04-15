@@ -2,10 +2,7 @@
 import React, { Component } from 'react';
 
 // Material-UI
-import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
 import Stepper, { Step, StepLabel } from 'material-ui/Stepper';
-import Button from 'material-ui/Button';
 import Typography from 'material-ui/Typography';
 import { Grid, CircularProgress } from 'material-ui';
 

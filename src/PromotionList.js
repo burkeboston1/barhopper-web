@@ -100,7 +100,7 @@ export default class PromotionList extends Component {
                                 <Typography variant="display1">Our Promotions</Typography>
                             </Grid>
                             <Grid item xs={2} align="right">
-                                <IconButton onClick={this.props.handleOpen} style={{backgroundColor: "#fdcd4c", color: "white"}}><AddIcon /></IconButton>
+                                <IconButton onClick={this.props.handleCreateOpen} style={{backgroundColor: "#fdcd4c", color: "white"}}><AddIcon /></IconButton>
                             </Grid>
                         </Grid>
                     </CardContent>
@@ -112,7 +112,7 @@ export default class PromotionList extends Component {
                                         <Avatar>{promotion.name[0]}</Avatar>
                                         <ListItemText primary={promotion.name} secondary={promotion.description}/>
                                         
-                                        <IconButton color="primary">
+                                        <IconButton color="primary" onClick={() => this.props.handleEditOpen(promotion)}>
                                             <EditIcon />
                                         </IconButton>
 

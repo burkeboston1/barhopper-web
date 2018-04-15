@@ -9,8 +9,6 @@ import Grid from 'material-ui/Grid';
 import Card, { CardContent } from 'material-ui/Card';
 
 // BarHopper components
-import Header from './Header';
-import CreateBar from './CreateBar';
 
 class Signup extends Component {
     constructor(props) {
