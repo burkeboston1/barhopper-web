@@ -12,6 +12,7 @@ import CreatePromo from './CreatePromo';
 import Header from './Header';
 import PromotionList from './PromotionList';
 import EditPromo from './EditPromo';
+import { Redirect } from 'react-router-dom';
 
 const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -53,7 +54,8 @@ export default class Dashboard extends Component {
             },
             createOpen: false, 
             editOpen: false, 
-            selectedPromo: ""
+            selectedPromo: "", 
+            loggedIn: true
         };
 
         this.handleCreateOpen = this.handleCreateOpen.bind(this);
@@ -90,11 +92,19 @@ export default class Dashboard extends Component {
                     bar_id: bar_id,
                     token: token
                 });
+            } else {
+                this.setState({
+                    loggedIn: false
+                })
             }
         });
     }
 
     render() {
+
+        if (!this.state.loggedIn) {
+            return <Redirect push to={{pathname: "/login"}}/>;
+        }
 
         return (
             <div>
@@ -103,7 +113,8 @@ export default class Dashboard extends Component {
                 <Grid container>
                     <Grid item xs></Grid>
 
-                    <Grid container xs={10}>
+                    <Grid item xs={10}>
+                    <Grid container>
 
                         <Grid item xs={4} style={{marginBottom: "5px"}}>
                             <Card>
@@ -122,7 +133,7 @@ export default class Dashboard extends Component {
                             <PromotionList handleCreateOpen={this.handleCreateOpen} handleEditOpen={this.handleEditOpen} handleConfirmOpen={this.handleConfirmOpen}/>
                         </Grid>
 
-                    </Grid>
+                    </Grid></Grid>
                     <Grid item xs></Grid>
                 </Grid>
 

@@ -7,13 +7,34 @@ import Typography from 'material-ui/Typography';
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 import DateTimePicker from 'material-ui-pickers/DateTimePicker';
+import TimePicker from 'material-ui-pickers/TimePicker';
+import { FormGroup, FormControlLabel } from 'material-ui/Form';
+import Switch from 'material-ui/Switch';
+import Checkbox from 'material-ui/Checkbox';
+
+import moment from 'moment';
 
 export default class CreatePromo extends Component {
 
+    debug = () => {
+        console.log(this.state.recurrence.startTime.getHours());
+        console.log(this.state.recurrence.endTime.getHours());
+    }
+
     handleChange = name => event => {
         this.setState({
-            [name]: event.target.value,
+            [name]: event.target.value
         });
+    };
+
+    handleCheck = name => event => {
+        if (typeof name === "number") {
+            var recurrence = {...this.state.recurrence};
+            recurrence.daysOfWeek[name] = event.target.checked;
+            this.setState({ recurrence });
+        } else {
+            this.setState({ [name]: event.target.checked });
+        }
     };
 
     handleStartDateChange = (date) => {
@@ -22,6 +43,18 @@ export default class CreatePromo extends Component {
 
     handleEndDateChange = (date) => {
         this.setState({ endDate: date });
+    }
+
+    handleStartTimeChange = (time) => {
+        var recurrence = {...this.state.recurrence};
+        recurrence.startTime = new Date(time);
+        this.setState({ recurrence });
+    }
+
+    handleEndTimeChange = (time) => {
+        var recurrence = {...this.state.recurrence};
+        recurrence.endTime = new Date(time);
+        this.setState({ recurrence });
     }
 
     validateInput = function() {
@@ -47,7 +80,11 @@ export default class CreatePromo extends Component {
                     description: this.state.description,
                     startDate: this.state.startDate,
                     endDate: this.state.endDate,
-                    bar_id: this.state.bar_id
+                    bar_id: this.state.bar_id, 
+                    recurring: this.state.recurring,
+                    startTime: this.state.recurrence.startTime, 
+                    endTime: this.state.recurrence.endTime, 
+                    daysOfWeek: this.state.recurrence.daysOfWeek
                 }),
                 headers: new Headers({
                     'Content-Type': 'application/json',
@@ -79,9 +116,9 @@ export default class CreatePromo extends Component {
             endDate: new Date(),
             recurring: false,
             recurrence: {
-                daysOfWeek: "",
-                startTime: "",
-                endTime: ""
+                daysOfWeek: [false, false, false, false, false, false, false],
+                startTime: new Date(), 
+                endTime: new Date()
             }
         }
 
@@ -98,6 +135,7 @@ export default class CreatePromo extends Component {
     }
 
     render() {
+        var { recurring } = this.state;
         return(
             <Card style={{position: "absolute", width: "40%", left: "50%", top: "50%", transform: "translate(-50%, -50%)", padding: "25px"}}>
                 <Typography variant="display1">
@@ -112,25 +150,66 @@ export default class CreatePromo extends Component {
                         value={this.state.description} error={this.state.descError}
                         margin="dense" required fullWidth />
 
-                    <DateTimePicker
-                        label="Start Date and Time"
-                        disablePast
-                        style={{marginTop: "15px"}}
-                        value={this.state.startDate}
-                        onChange={this.handleStartDateChange}
+                    <FormGroup row>
+                        <FormControlLabel control={
+                            <Switch checked={recurring} onChange={this.handleCheck("recurring")} value="recurring"/>
+                        }
+                        label="This is a recurring promotion"
                         />
+                    </FormGroup>
 
-                    &nbsp;&nbsp;
+                    { !recurring ? 
+                    
+                        (<div>
+                            <DateTimePicker
+                                label="Start Date and Time"
+                                disablePast
+                                style={{marginTop: "15px"}}
+                                value={this.state.startDate}
+                                onChange={this.handleStartDateChange}/>
 
-                    <DateTimePicker
-                        label="End Date and Time"
-                        disablePast
-                        minDate={this.state.startDate}
-                        minDateMessage="End date must come after start date"
-                        style={{marginTop: "15px"}}
-                        value={this.state.endDate}
-                        onChange={this.handleEndDateChange}
-                        />
+                            <span>&nbsp;&nbsp;</span>
+
+                            <DateTimePicker
+                                label="End Date and Time"
+                                disablePast
+                                minDate={this.state.startDate}
+                                minDateMessage="End date must come after start date"
+                                style={{marginTop: "15px"}}
+                                value={this.state.endDate}
+                                onChange={this.handleEndDateChange}/>
+                        </div>)
+
+                        :
+
+                        (<div>
+                            <FormGroup row>
+                                <FormControlLabel control={<Checkbox checked={this.state.recurrence.daysOfWeek[0]} onChange={this.handleCheck(0)} />} label="Sunday" />
+                                <FormControlLabel control={<Checkbox checked={this.state.recurrence.daysOfWeek[1]} onChange={this.handleCheck(1)} />} label="Monday"/>
+                                <FormControlLabel control={<Checkbox checked={this.state.recurrence.daysOfWeek[2]} onChange={this.handleCheck(2)} />} label="Tuesday"/>
+                                <FormControlLabel control={<Checkbox checked={this.state.recurrence.daysOfWeek[3]} onChange={this.handleCheck(3)} />} label="Wednesday"/>
+                                <FormControlLabel control={<Checkbox checked={this.state.recurrence.daysOfWeek[4]} onChange={this.handleCheck(4)} />} label="Thursday"/>
+                                <FormControlLabel control={<Checkbox checked={this.state.recurrence.daysOfWeek[5]} onChange={this.handleCheck(5)} />} label="Friday"/>
+                                <FormControlLabel control={<Checkbox checked={this.state.recurrence.daysOfWeek[7]} onChange={this.handleCheck(6)} />} label="Saturday"/>
+                            </FormGroup>
+
+                            <TimePicker 
+                                label="Start Time" 
+                                value={this.state.recurrence.startTime} 
+                                onChange={this.handleStartTimeChange} />
+
+                            <span>&nbsp;&nbsp;</span>
+
+                            <TimePicker 
+                                label="End Time" 
+                                value={this.state.recurrence.endTime} 
+                                minDate={this.state.recurrence.startTime}
+                                minDateMessage="End time must come after start time"
+                                onChange={this.handleEndTimeChange} />
+                        </div>)
+                
+                    }
+
                     <Button onClick={this.onSubmit} variant="flat" fullWidth style={{backgroundColor: "#fdcd4c", marginTop: "15px"}}>Send It</Button>
                 </form>
             </Card>
