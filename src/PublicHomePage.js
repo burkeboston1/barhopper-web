@@ -7,11 +7,7 @@ import Typography from 'material-ui/Typography';
 
 // BarHopper
 import Header from './Header';
-
 export default class PublicHomePage extends Component {
-	constructor(props) {
-		super(props);
-	}
 
 	render() {
 		return (

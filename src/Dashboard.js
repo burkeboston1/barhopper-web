@@ -118,7 +118,7 @@ export default class Dashboard extends Component {
 
                         <Grid item xs={4} style={{marginBottom: "5px"}}>
                             <Card>
-                                <img alt="bar_photo" src="ho_house.jpg" style={{width: "100%"}}/>
+                                <img alt="bar_photo" src={this.state.bar.imageUrl} style={{width: "100%"}}/>
                                 <CardContent>
                                     <Typography variant="display2">{this.state.bar.name}</Typography>
                                     <br /> 

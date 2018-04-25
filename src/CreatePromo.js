@@ -141,7 +141,7 @@ export default class CreatePromo extends Component {
                 <Typography variant="display1">
                     Create a Promotion
                 </Typography>
-                <form>
+                <form id="createpromo">
                     <TextField id="name" label="Title" onChange={this.handleChange("name")}
                         value={this.state.name} error={this.state.nameError}
                         margin="dense" required fullWidth />
