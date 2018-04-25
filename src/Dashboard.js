@@ -13,8 +13,7 @@ import Header from './Header';
 import PromotionList from './PromotionList';
 import EditPromo from './EditPromo';
 import { Redirect } from 'react-router-dom';
-
-const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+import { Avatar } from 'material-ui';
 
 export default class Dashboard extends Component {
 
@@ -38,14 +37,8 @@ export default class Dashboard extends Component {
         super(props);
 
         this.state = {
-            bar_id: '',
             token: '',
-            bar: {
-                name: '',
-                address: '',
-                email: '',
-                phone: ''
-            },
+            bar: {},
             createOpen: false, 
             editOpen: false, 
             selectedPromo: '', 
@@ -61,36 +54,15 @@ export default class Dashboard extends Component {
     componentWillMount() {
         // Get bar_id, token from props or local storage
         var token = this.props.location.token || this.props.token || localStorage.getItem('Token');
-        var bar_id = this.props.location.bar_id || this.props.bar_id || localStorage.getItem('BarID');
+        var bar = this.props.location.bar || this.props.bar || JSON.parse(localStorage.getItem('BarObject'));
 
         // Save token, bar_id in local storage in case of page refresh
         localStorage.setItem('Token', token);
-        localStorage.setItem('BarID', bar_id);
+        localStorage.setItem('BarObject', JSON.stringify(bar));
 
-        const getBarUrl = 'https://barhopperapi.herokuapp.com/api/bars/' + bar_id;
-
-        var data = {
-            method: 'GET',
-            headers: new Headers({
-                'Content-Type': 'application/json',
-                'x-access-token': token
-            })
-        };
-
-        fetch(getBarUrl, data)
-        .then((res) => {return res.json();})
-        .then((res) => {
-            if (res.success === true) {
-                this.setState({
-                    bar: res.bar,
-                    bar_id: bar_id,
-                    token: token
-                });
-            } else {
-                this.setState({
-                    loggedIn: false
-                })
-            }
+        this.setState({
+            token: token, 
+            bar: bar
         });
     }
 
@@ -101,11 +73,11 @@ export default class Dashboard extends Component {
         }
 
         return (
-            <div>
+            <div style={{flexGrow: '1'}}>
                 <Header loggedIn={true}/>
                 <br />
                 <Grid container>
-                    <Grid item xs></Grid>
+                    <Grid item xs={1}></Grid>
 
                     <Grid item xs={10}>
                     <Grid container>
@@ -114,8 +86,9 @@ export default class Dashboard extends Component {
                             <Card>
                                 <img alt='bar_photo' src={this.state.bar.imageUrl} style={{width: '100%'}}/>
                                 <CardContent>
-                                    <Typography variant='display2'>{this.state.bar.name}</Typography>
-                                    <br /> 
+                                    <Avatar src={this.state.bar.logoUrl} style={{width: "70px", height: "70px", display: "table-cell"}} />
+                                    <Typography variant='display2' style={{display: "table-cell", verticalAlign: "middle", paddingLeft: '15px'}}>{this.state.bar.name}</Typography>
+                                    <br />
                                     <Typography>{this.state.bar.address}</Typography>
                                     <Typography>{this.state.bar.email}</Typography>
                                     <Typography>{this.state.bar.phone}</Typography>
@@ -124,18 +97,18 @@ export default class Dashboard extends Component {
                         </Grid>
 
                         <Grid item xs={8}>
-                            <PromotionList handleCreateOpen={this.handleCreateOpen} handleEditOpen={this.handleEditOpen} handleConfirmOpen={this.handleConfirmOpen}/>
+                            <PromotionList bar_id={this.state.bar._id} handleCreateOpen={this.handleCreateOpen} handleEditOpen={this.handleEditOpen} handleConfirmOpen={this.handleConfirmOpen}/>
                         </Grid>
 
                     </Grid></Grid>
-                    <Grid item xs></Grid>
+                    <Grid item xs={1}></Grid>
                 </Grid>
 
                 <Modal open={this.state.createOpen} onClose={this.handleCreateClose}>
-                    <CreatePromo />
+                    <CreatePromo bar_id={this.state.bar._id} token={this.state.token}/>
                 </Modal>
                 <Modal open={this.state.editOpen} onClose={this.handleEditClose}>
-                    <EditPromo promotion={this.state.selectedPromo}/>
+                    <EditPromo bar_id={this.state.bar._id} token={this.state.token} promotion={this.state.selectedPromo}/>
                 </Modal>
             </div>
         );

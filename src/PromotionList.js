@@ -59,7 +59,7 @@ export default class PromotionList extends Component {
 		super(props);
 
 		this.state = {
-			bar_id: localStorage.getItem("BarID"), 
+			bar_id: this.props.bar_id, 
 			token: localStorage.getItem("Token"),
             promotions: [], 
             selectedPromo: "",
@@ -97,7 +97,7 @@ export default class PromotionList extends Component {
                     <CardContent>
                         <Grid container>
                             <Grid item xs={10}>
-                                <Typography variant="display1">Our Promotions</Typography>
+                                <Typography variant="display1">All Promotions</Typography>
                             </Grid>
                             <Grid item xs={2} align="right">
                                 <IconButton onClick={this.props.handleCreateOpen} style={{backgroundColor: "#fdcd4c", color: "white"}}><AddIcon /></IconButton>

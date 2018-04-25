@@ -7,7 +7,7 @@ import Typography from 'material-ui/Typography';
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 import Card, { CardContent } from 'material-ui/Card';
-import { Input } from 'material-ui';
+import Icon from 'material-ui/Icon';
 
 // BarHopper
 
@@ -36,7 +36,9 @@ export default class CreateBar extends Component {
             logo: '', 
             image: '', 
             logoCloudUrl: '',
-            imageCloudUrl: ''
+            imageCloudUrl: '', 
+            logoError: false, 
+            imageError: false
         }
 
         this.handleChange = this.handleChange.bind(this);
@@ -72,7 +74,6 @@ export default class CreateBar extends Component {
                 callback();
 			})
         }
-
         logoReader.readAsDataURL(this.state.logo);
     }
 
@@ -82,12 +83,15 @@ export default class CreateBar extends Component {
         this.setState({
             nameError: !this.state.barName,
             emailError: !this.state.barEmail 
-                     || !emailRegex.test(this.state.email.toLowerCase()),
+                     || !emailRegex.test(this.state.barEmail.toLowerCase()),
             phoneError: !this.state.barPhone,
-            addrError: !this.state.barAddress
+            addrError: !this.state.barAddress, 
+            logoError: !this.state.logo, 
+            imageError: !this.state.image
         })
 
-        return !(this.state.nameError || this.state.emailError || this.state.phoneError || this.state.addrError)
+        return !(this.state.nameError || this.state.emailError || this.state.phoneError || this.state.addrError
+                    || this.state.logoError || this.state.imageError);
     }
 
     onSubmit = function () {
@@ -116,7 +120,9 @@ export default class CreateBar extends Component {
                     .then((res) => {return res.json();})
                     .then((res) =>{
                         if (res.success === true) {
-                            this.props.handleNext({bar_id: res.bar_id});
+                            this.props.handleNext({bar: res.bar});
+                        } else {
+                            // TODO some error handling
                         }
                     });
             });
@@ -143,8 +149,39 @@ export default class CreateBar extends Component {
                             <TextField fullWidth required id='barAddress' label='Address' value={this.state.barAddress} error={this.state.addrError} onChange={this.handleChange('barAddress')} style={{marginTop: '5px'}}/>
                             <TextField fullWidth required id='barEmail' label='Email' value={this.state.barEmail} error={this.state.emailError} onChange={this.handleChange('barEmail')} style={{marginTop: '5px'}}/>
                             <TextField fullWidth required id='barPhone' label='Phone #' value={this.state.barPhone} error={this.state.phoneError} onChange={this.handleChange('barPhone')} style={{marginTop: '5px'}}/>
-                            <Input type='file' id='logo' label='Bar Logo' onChange={this.handleImageChange('logo')} accept='.png, .jpg, .jpeg'/>
-                            <Input type='file' id='image' label='Picture of Bar' onChange={this.handleImageChange('image')} accept='.png, .jpg, .jpeg'/>
+                         
+                            <div style={{marginTop: '10px'}}>
+                            <tr>
+                            <td><Button
+                                component="label"
+                                color='primary'>
+                                <Icon>file_upload</Icon>
+                                &nbsp;&nbsp;Upload Bar Logo
+                                <input
+                                    onChange={this.handleImageChange('logo')}
+                                    style={{ display: 'none' }}
+                                    type="file"
+                                    accept='.png, .jpg, .jpeg'
+                                />
+                            </Button></td>
+                            <td><Typography variant='subheading'>{this.state.logo.name || 'No file selected'}</Typography></td>
+                            </tr>
+                            <tr>
+                            <td><Button
+                                component="label"
+                                color='primary'>
+                                <Icon>file_upload</Icon>
+                                &nbsp;&nbsp;Upload Bar Image
+                                <input
+                                    onChange={this.handleImageChange('image')}
+                                    style={{ display: 'none' }}
+                                    type="file"
+                                    accept='.png, .jpg, .jpeg'
+                                />
+                            </Button></td>
+                            <td><Typography variant='subheading'>{this.state.image.name || 'No file selected'}</Typography></td>
+                            </tr>
+                            </div>
 
                             <Button fullWidth style={{marginTop: '15px', backgroundColor: '#fdcd4c', color: 'white'}} onClick={this.onSubmit}>Submit</Button>
                         </form>

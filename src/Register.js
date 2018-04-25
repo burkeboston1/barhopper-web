@@ -66,7 +66,7 @@ export default class Register extends Component {
         const { activeStep, registered } = this.state;
 
         if (registered) {
-            return <Redirect push to={{pathname: "/dashboard", bar_id: this.state.bar_id, token: this.state.token}}/>
+            return <Redirect push to={{pathname: "/dashboard", bar: this.state.bar, token: this.state.token}}/>
         }
 
         return (

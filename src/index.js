@@ -13,6 +13,8 @@ import Register from './Register';
 import MomentUtils from 'material-ui-pickers/utils/moment-utils';
 import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
 
+require('dotenv').config();
+
 ReactDOM.render(
     <MuiPickersUtilsProvider utils={MomentUtils}>
         <BrowserRouter>

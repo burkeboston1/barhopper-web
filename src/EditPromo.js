@@ -11,7 +11,6 @@ import TimePicker from 'material-ui-pickers/TimePicker';
 import { FormGroup, FormControlLabel } from 'material-ui/Form';
 import Switch from 'material-ui/Switch';
 import Checkbox from 'material-ui/Checkbox';
-import moment from 'moment';
 
 export default class EditPromo extends Component {
     debug = () => {
@@ -127,8 +126,8 @@ export default class EditPromo extends Component {
 
     componentWillMount() {
         this.setState({
-            bar_id: localStorage.getItem('BarID'),
-            token: localStorage.getItem('Token')
+            bar_id: this.props.bar_id,
+            token: this.props.token
         })
     }
 
@@ -201,14 +200,12 @@ export default class EditPromo extends Component {
                             <TimePicker 
                                 label="End Time" 
                                 value={this.state.recurrence.endTime} 
-                                minDate={this.state.recurrence.startTime}
-                                minDateMessage="End time must come after start time"
                                 onChange={this.handleEndTimeChange} />
                         </div>)
                 
                     }
                     
-                    <Button onClick={this.onSubmit} variant="flat" fullWidth style={{backgroundColor: "#fdcd4c", marginTop: "15px"}}>Update</Button>
+                    <Button onClick={this.onSubmit} variant="flat" fullWidth style={{color: "white", backgroundColor: "#fdcd4c", marginTop: "15px"}}>Update</Button>
                 </form>
             </Card>
         )
