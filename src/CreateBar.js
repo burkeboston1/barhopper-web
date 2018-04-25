@@ -41,6 +41,7 @@ export default class CreateBar extends Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.validateInput = this.validateInput.bind(this);
     }
 
     handleChange = name => event => {
@@ -75,19 +76,25 @@ export default class CreateBar extends Component {
         logoReader.readAsDataURL(this.state.logo);
     }
 
-    onSubmit = function () {
-        // validate the input
+    // Returns true if input is valid
+    validateInput = function () {
+        var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         this.setState({
             nameError: !this.state.barName,
-            emailError: !this.state.barEmail,
+            emailError: !this.state.barEmail 
+                     || !emailRegex.test(this.state.email.toLowerCase()),
             phoneError: !this.state.barPhone,
             addrError: !this.state.barAddress
         })
 
-        if (!(this.state.nameError || this.state.emailError || this.state.phoneError || this.state.addrError)) {
+        return !(this.state.nameError || this.state.emailError || this.state.phoneError || this.state.addrError)
+    }
+
+    onSubmit = function () {
+        if (this.validateInput()) {
             
             this.uploadBarImages(() => {
-                const createBarUrl = 'http://localhost:8080/api/newbar';
+                const createBarUrl = 'https://barhopperapi.herokuapp.com/api/newbar';
 
                 var createBarData = {
                     method: 'POST',

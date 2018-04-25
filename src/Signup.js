@@ -39,10 +39,8 @@ class Signup extends Component {
     };
 
     validateInput = function() {
-        var emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         var nameError = !this.state.name;
-        var emailError = !this.state.email
-                      || !emailRegex.test(this.state.email.toLowerCase());
+        var emailError = !this.state.email;
         var passwordError = this.state.password !== this.state.confirmPassword
                          || !this.state.password;
         this.setState({nameError: nameError});

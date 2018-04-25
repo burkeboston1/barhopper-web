@@ -14,7 +14,7 @@ import PromotionList from './PromotionList';
 import EditPromo from './EditPromo';
 import { Redirect } from 'react-router-dom';
 
-const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 export default class Dashboard extends Component {
 
@@ -34,27 +34,21 @@ export default class Dashboard extends Component {
         this.setState({ editOpen: false });
     }
 
-    formatDate = (dateStr) => {
-        var date = new Date(dateStr);
-        return days[date.getDay()] + " " + date.getMonth() + "/" + date.getDay()
-        + " @ " + date.getHours() + ":" + date.getMinutes();
-    }
-
     constructor (props) {
         super(props);
 
         this.state = {
-            bar_id: "",
-            token: "",
+            bar_id: '',
+            token: '',
             bar: {
-                name: "",
-                address: "",
-                email: "",
-                phone: ""
+                name: '',
+                address: '',
+                email: '',
+                phone: ''
             },
             createOpen: false, 
             editOpen: false, 
-            selectedPromo: "", 
+            selectedPromo: '', 
             loggedIn: true
         };
 
@@ -66,12 +60,12 @@ export default class Dashboard extends Component {
 
     componentWillMount() {
         // Get bar_id, token from props or local storage
-        var token = this.props.location.token || this.props.token || localStorage.getItem("Token");
-        var bar_id = this.props.location.bar_id || this.props.bar_id || localStorage.getItem("BarID");
+        var token = this.props.location.token || this.props.token || localStorage.getItem('Token');
+        var bar_id = this.props.location.bar_id || this.props.bar_id || localStorage.getItem('BarID');
 
         // Save token, bar_id in local storage in case of page refresh
-        localStorage.setItem("Token", token);
-        localStorage.setItem("BarID", bar_id);
+        localStorage.setItem('Token', token);
+        localStorage.setItem('BarID', bar_id);
 
         const getBarUrl = 'https://barhopperapi.herokuapp.com/api/bars/' + bar_id;
 
@@ -103,7 +97,7 @@ export default class Dashboard extends Component {
     render() {
 
         if (!this.state.loggedIn) {
-            return <Redirect push to={{pathname: "/login"}}/>;
+            return <Redirect push to={{pathname: '/login'}}/>;
         }
 
         return (
@@ -116,11 +110,11 @@ export default class Dashboard extends Component {
                     <Grid item xs={10}>
                     <Grid container>
 
-                        <Grid item xs={4} style={{marginBottom: "5px"}}>
+                        <Grid item xs={4} style={{marginBottom: '5px'}}>
                             <Card>
-                                <img alt="bar_photo" src={this.state.bar.imageUrl} style={{width: "100%"}}/>
+                                <img alt='bar_photo' src={this.state.bar.imageUrl} style={{width: '100%'}}/>
                                 <CardContent>
-                                    <Typography variant="display2">{this.state.bar.name}</Typography>
+                                    <Typography variant='display2'>{this.state.bar.name}</Typography>
                                     <br /> 
                                     <Typography>{this.state.bar.address}</Typography>
                                     <Typography>{this.state.bar.email}</Typography>

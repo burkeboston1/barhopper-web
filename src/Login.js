@@ -98,7 +98,7 @@ export default class Login extends Component {
                         <form style={{margin: "auto"}}>
                             <TextField required fullWidth id="email" label="Email" error={this.state.emailError} value={this.state.email} margin="dense" onChange={this.handleChange('email')}/>
                             <TextField required fullWidth id="password" label="Password" type="password" error={this.state.passwordError} value={this.state.password} margin="dense" onChange={this.handleChange('password')}/>
-                            <br />
+                            <div style={{height: "150px"}}></div>
                             <Button variant="flat" fullWidth style={{backgroundColor: "#fdcd4c", color: "white", marginTop: "10px"}} onClick={this.onSubmit}>Login</Button>
                         </form>
                     </Grid>
