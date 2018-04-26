@@ -144,7 +144,7 @@ export default class CreatePromo extends Component {
                         value={this.state.name} error={this.state.nameError}
                         margin="dense" required fullWidth />
 
-                    <TextField id="description" label="Description" onChange={this.handleChange("description")}
+                    <TextField multiline id="description" label="Description" onChange={this.handleChange("description")}
                         value={this.state.description} error={this.state.descError}
                         margin="dense" required fullWidth />
 

@@ -1,19 +1,22 @@
 // React
 import React, {Component} from 'react';
+import { Redirect } from 'react-router-dom';
 
 // Material UI
 import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 import Card, { CardContent } from 'material-ui/Card';
 import Modal from 'material-ui/Modal';
+import { Avatar, IconButton } from 'material-ui';
+import Icon from 'material-ui/Icon';
+import Button from 'material-ui/Button';
 
 // BarHopper components
 import CreatePromo from './CreatePromo';
 import Header from './Header';
 import PromotionList from './PromotionList';
 import EditPromo from './EditPromo';
-import { Redirect } from 'react-router-dom';
-import { Avatar } from 'material-ui';
+import EditBar from './EditBar';
 
 export default class Dashboard extends Component {
 
@@ -26,11 +29,23 @@ export default class Dashboard extends Component {
     }
 
     handleEditOpen = (selected) => {
-        this.setState({ editOpen: true, selectedPromo: selected });
+        this.setState({ editPromoOpen: true, selectedPromo: selected });
     }
 
     handleEditClose = () => {
-        this.setState({ editOpen: false });
+        this.setState({ editPromoOpen: false });
+    }
+
+    handleModalOpen = (name, selected) => event => {
+        this.setState({
+            [name]: true
+        });
+    }
+
+    handleModalClose = name => event => {
+        this.setState({
+            [name]: false
+        })
     }
 
     constructor (props) {
@@ -40,7 +55,8 @@ export default class Dashboard extends Component {
             token: '',
             bar: {},
             createOpen: false, 
-            editOpen: false, 
+            editPromoOpen: false, 
+            editBarOpen: false,
             selectedPromo: '', 
             loggedIn: true
         };
@@ -92,6 +108,10 @@ export default class Dashboard extends Component {
                                     <Typography>{this.state.bar.address}</Typography>
                                     <Typography>{this.state.bar.email}</Typography>
                                     <Typography>{this.state.bar.phone}</Typography>
+                                    <br />
+                                    <Button fullWidth style={{backgroundColor: 'lightGray', color: 'white'}} onClick={this.handleModalOpen('editBarOpen')}>
+                                        <Icon>edit</Icon>
+                                    </Button>
                                 </CardContent>
                             </Card>
                         </Grid>
@@ -104,11 +124,14 @@ export default class Dashboard extends Component {
                     <Grid item xs={1}></Grid>
                 </Grid>
 
-                <Modal open={this.state.createOpen} onClose={this.handleCreateClose}>
+                <Modal open={this.state.createOpen} onClose={this.handleModalClose('createOpen')}>
                     <CreatePromo bar_id={this.state.bar._id} token={this.state.token}/>
                 </Modal>
-                <Modal open={this.state.editOpen} onClose={this.handleEditClose}>
+                <Modal open={this.state.editPromoOpen} onClose={this.handleModalClose('editPromoOpen')}>
                     <EditPromo bar_id={this.state.bar._id} token={this.state.token} promotion={this.state.selectedPromo}/>
+                </Modal>
+                <Modal open={this.state.editBarOpen} onClose={this.handleModalClose('editBarOpen')}>
+                    <EditBar bar_id={this.state.bar._id} token={this.state.token} bar={this.state.bar}/>
                 </Modal>
             </div>
         );
