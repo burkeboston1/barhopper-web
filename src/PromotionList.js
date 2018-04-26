@@ -100,7 +100,7 @@ export default class PromotionList extends Component {
                                 <Typography variant="display1">All Promotions</Typography>
                             </Grid>
                             <Grid item xs={2} align="right">
-                                <IconButton onClick={this.props.handleCreateOpen} style={{backgroundColor: "#fdcd4c", color: "white"}}><AddIcon /></IconButton>
+                                <IconButton onClick={this.props.handleModalOpen('createOpen')} style={{backgroundColor: "#fdcd4c", color: "white"}}><AddIcon /></IconButton>
                             </Grid>
                         </Grid>
                     </CardContent>

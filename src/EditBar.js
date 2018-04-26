@@ -35,8 +35,8 @@ export default class EditBar extends Component {
             bar_id: this.props.bar._id, 
             logo: '', 
             image: '', 
-            logoCloudUrl: '',
-            imageCloudUrl: '', 
+            logoCloudUrl: this.props.bar.logoUrl,
+            imageCloudUrl: this.props.bar.imageUrl, 
             logoError: false, 
             imageError: false
         }
@@ -65,7 +65,6 @@ export default class EditBar extends Component {
         logoReader.onloadend = () => {
             cloudinary.uploader.upload(logoReader.result, (res) => {
                 this.setState({ logoCloudUrl: res.secure_url });
-				imageReader.readAsDataURL(this.state.image);
 			})
         }
         imageReader.onloadend = () => {
@@ -74,7 +73,15 @@ export default class EditBar extends Component {
                 callback();
 			})
         }
-        logoReader.readAsDataURL(this.state.logo);
+        if (this.state.logo) {
+            logoReader.readAsDataURL(this.state.logo);
+        }
+        if (this.state.image) {
+            imageReader.readAsDataURL(this.state.image);
+        }
+        if (!this.state.logo && !this.state.image) {
+            callback();
+        }
     }
 
     // Returns true if input is valid
@@ -120,6 +127,7 @@ export default class EditBar extends Component {
                     .then((res) => {return res.json();})
                     .then((res) =>{
                         if (res.success === true) {
+                            localStorage.setItem('BarObject', JSON.stringify(res.bar));
                             window.location.reload();
                         } else {
                             // TODO some error handling

@@ -20,20 +20,8 @@ import EditBar from './EditBar';
 
 export default class Dashboard extends Component {
 
-    handleCreateOpen = () => {
-        this.setState({ createOpen: true });
-    }
-
-    handleCreateClose = () => {
-        this.setState({ createOpen: false });
-    }
-
     handleEditOpen = (selected) => {
         this.setState({ editPromoOpen: true, selectedPromo: selected });
-    }
-
-    handleEditClose = () => {
-        this.setState({ editPromoOpen: false });
     }
 
     handleModalOpen = (name, selected) => event => {
@@ -61,10 +49,7 @@ export default class Dashboard extends Component {
             loggedIn: true
         };
 
-        this.handleCreateOpen = this.handleCreateOpen.bind(this);
-        this.handleCreateClose = this.handleCreateClose.bind(this);
         this.handleEditOpen = this.handleEditOpen.bind(this);
-        this.handleEditClose = this.handleEditClose.bind(this);
     }
 
     componentWillMount() {
@@ -109,7 +94,9 @@ export default class Dashboard extends Component {
                                     <Typography>{this.state.bar.email}</Typography>
                                     <Typography>{this.state.bar.phone}</Typography>
                                     <br />
-                                    <Button fullWidth style={{backgroundColor: 'lightGray', color: 'white'}} onClick={this.handleModalOpen('editBarOpen')}>
+                                    <Button fullWidth 
+                                            style={{backgroundColor: 'lightGray', color: 'white'}} 
+                                            onClick={this.handleModalOpen('editBarOpen')}>
                                         <Icon>edit</Icon>
                                     </Button>
                                 </CardContent>
@@ -117,7 +104,7 @@ export default class Dashboard extends Component {
                         </Grid>
 
                         <Grid item xs={8}>
-                            <PromotionList bar_id={this.state.bar._id} handleCreateOpen={this.handleCreateOpen} handleEditOpen={this.handleEditOpen} handleConfirmOpen={this.handleConfirmOpen}/>
+                            <PromotionList bar_id={this.state.bar._id} handleModalOpen={this.handleModalOpen} handleEditOpen={this.handleEditOpen}/>
                         </Grid>
 
                     </Grid></Grid>
