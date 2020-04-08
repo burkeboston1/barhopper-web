@@ -5,9 +5,13 @@ BarHopper is a cross-platform product for bar owners to advertise their promotio
 ## Contributors
 
 Will Campbell - Android and BarHopper API
+
 Cameron Byers - iOS
+
 Taylor Quinn - UX
+
 Sophia Scheikl - UX
+
 
 This repro contains the web dashboard for bar owners to manage their promotions. 
 
@@ -15,4 +19,14 @@ Both the web dashboard and user apps consume the [BarHopper API](https://github.
 
 ## Screenshots
 
-// todo
+![BarHopper Web Register](barhopper_web1.png)
+
+![BarHopper Web Create](barhopper_web2.png)
+
+![BarHopper Web Manage](barhopper_web3.png)
+
+![BarHopper App Select](barhopper_app4.png)
+
+![BarHopper Android Promos](barhopper_app2.png)
+
+![BarHopper Android Bars](barhopper_app1.png)
